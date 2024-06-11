@@ -2,6 +2,7 @@ package by.tishalovichm.crudapp.service.impl;
 
 import by.tishalovichm.crudapp.dto.UserDto;
 import by.tishalovichm.crudapp.entity.User;
+import by.tishalovichm.crudapp.exception.ResourceNotFoundException;
 import by.tishalovichm.crudapp.mapper.UserMapper;
 import by.tishalovichm.crudapp.repository.UserRepository;
 import by.tishalovichm.crudapp.service.UserService;
@@ -28,7 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long id) {
-        User foundUser = userRepository.findById(id).orElseThrow();
+        User foundUser = userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", id)
+        );
         return mapper.toDto(foundUser);
     }
 
@@ -42,6 +45,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto user) {
+        if (userRepository.existsById(user.getId())) {
+            throw new ResourceNotFoundException("User", "id", user.getId());
+        }
+
         User updatedUser = userRepository.save(
                 mapper.toUser(user)
         );
@@ -51,6 +58,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(Long id) {
+        if (userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User", "id", id);
+        }
+
         userRepository.deleteById(id);
     }
 
