@@ -2,10 +2,10 @@ package by.tishalovichm.crudapp.service.impl;
 
 import by.tishalovichm.crudapp.dto.UserDto;
 import by.tishalovichm.crudapp.entity.User;
-import by.tishalovichm.crudapp.mapper.UserMapper;
 import by.tishalovichm.crudapp.repository.UserRepository;
 import by.tishalovichm.crudapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,40 +13,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserMapper userMapper;
+    private final ModelMapper mapper;
 
     private final UserRepository userRepository;
 
     @Override
     public UserDto createUser(UserDto user) {
         User savedUser = userRepository.save(
-                userMapper.toUser(user)
+                mapper.map(user, User.class)
         );
 
-        return userMapper.toDto(savedUser);
+        return mapper.map(savedUser, UserDto.class);
     }
 
     @Override
     public UserDto getUserById(Long id) {
         User foundUser = userRepository.findById(id).orElseThrow();
-        return userMapper.toDto(foundUser);
+        return mapper.map(foundUser, UserDto.class);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(userMapper::toDto)
+                .map(user -> mapper.map(user, UserDto.class))
                 .toList();
     }
 
     @Override
     public UserDto updateUser(UserDto user) {
         User updatedUser = userRepository.save(
-                userMapper.toUser(user)
+                mapper.map(user, User.class)
         );
 
-        return userMapper.toDto(updatedUser);
+        return mapper.map(updatedUser, UserDto.class);
     }
 
     @Override
