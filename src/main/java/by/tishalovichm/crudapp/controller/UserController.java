@@ -1,16 +1,11 @@
 package by.tishalovichm.crudapp.controller;
 
 import by.tishalovichm.crudapp.dto.UserDto;
-import by.tishalovichm.crudapp.exception.ErrorDetails;
-import by.tishalovichm.crudapp.exception.ResourceNotFoundException;
 import by.tishalovichm.crudapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -47,22 +42,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserDto(@PathVariable Long id) {
         userService.deleteById(id);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleUserNotFound(
-            ResourceNotFoundException resourceNotFoundException,
-            WebRequest webRequest) {
-
-        return new ResponseEntity<>(
-                new ErrorDetails(
-                        LocalDateTime.now(),
-                        resourceNotFoundException.getMessage(),
-                        webRequest.getDescription(false),
-                        "USER_NOT_FOUND"
-                ),
-                HttpStatus.NOT_FOUND
-        );
     }
 
 }
