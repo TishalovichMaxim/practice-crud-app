@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto user) {
-        if (userRepository.existsById(user.getId())) {
+        if (!userRepository.existsById(user.getId())) {
             throw new ResourceNotFoundException("User", "id", user.getId());
         }
 
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(Long id) {
-        if (userRepository.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             throw new ResourceNotFoundException("User", "id", id);
         }
 
