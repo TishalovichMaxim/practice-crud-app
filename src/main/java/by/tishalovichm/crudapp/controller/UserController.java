@@ -2,6 +2,7 @@ package by.tishalovichm.crudapp.controller;
 
 import by.tishalovichm.crudapp.dto.UserDto;
 import by.tishalovichm.crudapp.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<UserDto> createUserDto(@RequestBody UserDto user) {
+    public ResponseEntity<UserDto> createUserDto(@Valid @RequestBody UserDto user) {
         UserDto createdUserDto = userService.createUser(user);
 
         return new ResponseEntity<>(createdUserDto, HttpStatus.CREATED);
@@ -33,7 +34,9 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUserDto(@PathVariable Long id, @RequestBody UserDto user) {
+    public ResponseEntity<UserDto> updateUserDto(
+            @PathVariable Long id, @Valid @RequestBody UserDto user) {
+
         user.setId(id);
         return ResponseEntity.ok(userService.updateUser(user));
     }
