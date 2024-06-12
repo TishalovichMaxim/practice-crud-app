@@ -2,6 +2,7 @@ package by.tishalovichm.crudapp.service.impl;
 
 import by.tishalovichm.crudapp.dto.UserDto;
 import by.tishalovichm.crudapp.entity.User;
+import by.tishalovichm.crudapp.exception.EmailAlreadyExistsException;
 import by.tishalovichm.crudapp.exception.ResourceNotFoundException;
 import by.tishalovichm.crudapp.mapper.UserMapper;
 import by.tishalovichm.crudapp.repository.UserRepository;
@@ -20,6 +21,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto user) {
+        String email = user.getEmail();
+        if (userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyExistsException(
+                    String.format("User with email %s already exists!", email));
+        }
+
         User savedUser = userRepository.save(
                 mapper.toUser(user)
         );
